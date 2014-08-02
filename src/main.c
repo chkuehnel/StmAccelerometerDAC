@@ -27,6 +27,7 @@
 #include "stm32f30x.h"
 #include "stm32f3_discovery.h"
 #include "common.h"
+#include "acc.h"
 
 /* Private typedef */
 
@@ -57,6 +58,7 @@ float a, b, c, d;
 int main(void)
 {
 	uint32_t ii;
+	float result[3];
 
 	/* Example use SysTick timer and read System core clock */
 	SysTick_Config(72);  /* 1 us if clock frequency 72 MHz */
@@ -75,6 +77,13 @@ int main(void)
 	STM_EVAL_LEDInit(LED10);
 
 	//STM_EVAL_PBInit(BUTTON_USER, BUTTON_MODE_EXTI);
+
+	// init Accelerometer
+	accInit();
+
+	result[0] = 0;
+	result[1] = 0;
+	result[2] = 0;
 
 	while (1)
 	{
@@ -113,6 +122,10 @@ int main(void)
 			STM_EVAL_LEDToggle(LED4);
 			_delay_ms(DELAY);
 		}
+		accReadData(&result);
+		result[0] = 0;
+		result[1] = 0;
+		result[2] = 0;
 	}
 
 	/* Program will never run to this line */
